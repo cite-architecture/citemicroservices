@@ -5,11 +5,11 @@ API for CTS/CITE returns URNs and Nodes in JSON format
 1. Download the zipped Repo
 2. Unpack it (You can rename it afterwards if you like)
 3. Open a Terminal/Commandline and cd into the unpacked (and optionally renamed) folder
-4. On Mac/Linux: start it up with `./citeMicros` / on Windows: doubleclick on `WinCiteMircros.exe` 
+4. On Mac/Linux: start it up with `./citeMicros-1.0.0` / on Windows: doubleclick on `WinCiteMircros-1.0.0.exe` 
 
 ## Trouble-shooting
 
-You might have to tell your Operating system that `./citeMicros` is an executable with `chmod +x citeMicros`
+You might have to tell your Operating system that `./citeMicros-1.0.0` is an executable with `chmod +x citeMicros-1.0.0`
 
 ## Test it with your favourite browser
 
