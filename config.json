@@ -1,0 +1,6 @@
+{
+"host": "localhost",
+"port": ":8080",
+"test_cex_source": "https://raw.githubusercontent.com/cite-architecture/cite-services-spec/master/texts/1.0/resources/test1.cex",
+"cex_source": "https://raw.githubusercontent.com/ThomasK81/CTSTextservice/master/cex/"
+}
