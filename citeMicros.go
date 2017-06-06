@@ -24,7 +24,7 @@ type Node struct {
 	Text     string `json:"text,omitempty"`
 	Previous string `json:"previous"`
 	Next     string `json:"next"`
-	Index    int    `json:"index"`
+	Index    int    `json:"sequence"`
 }
 
 type CITEResponse struct {
@@ -135,7 +135,7 @@ func boolcontains(s []bool, e bool) bool {
 func level1contains(s []string, e string) bool {
 	var match []bool
 	for i := range s {
-		match2, _ := regexp.MatchString((e + "([:|.][0-9]+)$"), s[i])
+		match2, _ := regexp.MatchString((e + "([:|.]*[0-9]+)$"), s[i])
 		match = append(match, match2)
 	}
 	return boolcontains(match, true)
@@ -144,7 +144,7 @@ func level1contains(s []string, e string) bool {
 func level2contains(s []string, e string) bool {
 	var match []bool
 	for i := range s {
-		match2, _ := regexp.MatchString((e + "([:|.][0-9]+).([0-9]+)$"), s[i])
+		match2, _ := regexp.MatchString((e + "([:|.]*[0-9]+).([0-9]+)$"), s[i])
 		match = append(match, match2)
 	}
 	return boolcontains(match, true)
@@ -153,7 +153,7 @@ func level2contains(s []string, e string) bool {
 func level3contains(s []string, e string) bool {
 	var match []bool
 	for i := range s {
-		match2, _ := regexp.MatchString((e + "([:|.][0-9]+).([0-9]+).([0-9]+)$"), s[i])
+		match2, _ := regexp.MatchString((e + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), s[i])
 		match = append(match, match2)
 	}
 	return boolcontains(match, true)
@@ -162,7 +162,7 @@ func level3contains(s []string, e string) bool {
 func level4contains(s []string, e string) bool {
 	var match []bool
 	for i := range s {
-		match2, _ := regexp.MatchString((e + "([:|.][0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), s[i])
+		match2, _ := regexp.MatchString((e + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), s[i])
 		match = append(match, match2)
 	}
 	return boolcontains(match, true)
@@ -242,6 +242,7 @@ func ReturnWorkURNS(w http.ResponseWriter, r *http.Request) {
 	result := ParseURNS(CTSParams{Sourcetext: sourcetext})
 	for i := range result.URN {
 		result.URN[i] = strings.Join(strings.Split(result.URN[i], ":")[0:4], ":")
+		result.URN[i] = result.URN[i] + ":"
 	}
 	result.URN = removeDuplicatesUnordered(result.URN)
 	resultJSON, _ := json.Marshal(result)
@@ -713,7 +714,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
       case level1contains(RequestedWork.URN, startURN):
         var match []bool
         for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((startURN + "([:|.][0-9]+)$"), RequestedWork.URN[i])
+          match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
           match = append(match, match2)
         }
         for i := range match {
@@ -725,7 +726,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
       case level2contains(RequestedWork.URN, startURN):
         var match []bool
         for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((startURN + "([:|.][0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+          match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
           match = append(match, match2)
         }
         for i := range match {
@@ -737,7 +738,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
       case level3contains(RequestedWork.URN, startURN):
         var match []bool
         for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((startURN + "([:|.][0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+          match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
           match = append(match, match2)
         }
         for i := range match {
@@ -749,7 +750,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
       case level4contains(RequestedWork.URN, startURN):
         var match []bool
         for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((startURN + "([:|.][0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+          match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
           match = append(match, match2)
         }
         for i := range match {
@@ -771,7 +772,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
       case level1contains(RequestedWork.URN, endURN):
         var match []bool
         for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((endURN + "([:|.][0-9]+)$"), RequestedWork.URN[i])
+          match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
           match = append(match, match2)
         }
         for i := len(match) - 1; i >= 0; i-- {
@@ -783,7 +784,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
       case level2contains(RequestedWork.URN, endURN):
         var match []bool
         for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((endURN + "([:|.][0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+          match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
           match = append(match, match2)
         }
         for i := len(match) - 1; i >= 0; i-- {
@@ -795,7 +796,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
       case level3contains(RequestedWork.URN, endURN):
         var match []bool
         for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((endURN + "([:|.][0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+          match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
           match = append(match, match2)
         }
         for i := len(match) - 1; i >= 0; i-- {
@@ -807,7 +808,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
       case level4contains(RequestedWork.URN, endURN):
         var match []bool
         for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((endURN + "([:|.][0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+          match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
           match = append(match, match2)
         }
         for i := len(match) - 1; i >= 0; i-- {
@@ -831,7 +832,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 				var matchingURNs []string
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((requestUrn + "([:|.][0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((requestUrn + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := range match {
@@ -844,7 +845,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 				var matchingURNs []string
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((requestUrn + "([:|.][0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((requestUrn + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := range match {
@@ -857,7 +858,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 				var matchingURNs []string
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((requestUrn + "([:|.][0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((requestUrn + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := range match {
@@ -870,7 +871,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 				var matchingURNs []string
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((requestUrn + "([:|.][0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((requestUrn + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := range match {
@@ -979,7 +980,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			var matchingNodes []Node
 			var match []bool
 			for i := range RequestedWork.URN {
-				match2, _ := regexp.MatchString((requestUrn + "([:|.][0-9]+)$"), RequestedWork.URN[i])
+				match2, _ := regexp.MatchString((requestUrn + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
 				match = append(match, match2)
 			}
 			for i := range match {
@@ -1000,7 +1001,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			var matchingNodes []Node
 			var match []bool
 			for i := range RequestedWork.URN {
-				match2, _ := regexp.MatchString((requestUrn + "([:|.][0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+				match2, _ := regexp.MatchString((requestUrn + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 				match = append(match, match2)
 			}
 			for i := range match {
@@ -1021,7 +1022,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			var matchingNodes []Node
 			var match []bool
 			for i := range RequestedWork.URN {
-				match2, _ := regexp.MatchString((requestUrn + "([:|.][0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+				match2, _ := regexp.MatchString((requestUrn + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 				match = append(match, match2)
 			}
 			for i := range match {
@@ -1042,7 +1043,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			var matchingNodes []Node
 			var match []bool
 			for i := range RequestedWork.URN {
-				match2, _ := regexp.MatchString((requestUrn + "([:|.][0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+				match2, _ := regexp.MatchString((requestUrn + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 				match = append(match, match2)
 			}
 			for i := range match {
@@ -1076,7 +1077,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			case level1contains(RequestedWork.URN, startURN):
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((startURN + "([:|.][0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := range match {
@@ -1088,7 +1089,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			case level2contains(RequestedWork.URN, startURN):
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((startURN + "([:|.][0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := range match {
@@ -1100,7 +1101,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			case level3contains(RequestedWork.URN, startURN):
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((startURN + "([:|.][0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := range match {
@@ -1112,7 +1113,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			case level4contains(RequestedWork.URN, startURN):
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((startURN + "([:|.][0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := range match {
@@ -1134,7 +1135,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			case level1contains(RequestedWork.URN, endURN):
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((endURN + "([:|.][0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := len(match) - 1; i >= 0; i-- {
@@ -1146,7 +1147,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			case level2contains(RequestedWork.URN, endURN):
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((endURN + "([:|.][0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := len(match) - 1; i >= 0; i-- {
@@ -1158,7 +1159,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			case level3contains(RequestedWork.URN, endURN):
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((endURN + "([:|.][0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := len(match) - 1; i >= 0; i-- {
@@ -1170,7 +1171,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 			case level4contains(RequestedWork.URN, endURN):
 				var match []bool
 				for i := range RequestedWork.URN {
-					match2, _ := regexp.MatchString((endURN + "([:|.][0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
 					match = append(match, match2)
 				}
 				for i := len(match) - 1; i >= 0; i-- {
