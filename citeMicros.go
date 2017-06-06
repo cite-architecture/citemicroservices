@@ -275,6 +275,7 @@ func ParseURNS(p CTSParams) TextResponse {
 		}
 		response.URN = append(response.URN, line[0])
 	}
+	response.Status = "Success"
 	return response
 }
 
