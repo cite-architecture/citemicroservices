@@ -4,13 +4,12 @@ Implementation of the CITE architexture microservices specified [here](https://g
 
 
 ## Get Started
-1. Download the zipped Repo
-2. Unpack it (You can rename it afterwards if you like)
-3. Open a Terminal/Commandline and cd into the unpacked (and optionally renamed) folder
+1. Clone the repository or download and unpack the zipped repository. (You can rename it afterwards if you like.)
+2. Open a Terminal/Commandline and `cd` into the new folder.
 4. On Mac/Linux: start it up with `./citeMicros-VERSION` / on Windows: doubleclick on `WinCiteMircros-VERSION.exe` 
 
 ## Trouble-shooting
-
+`
 You might have to tell your Operating system that `./citeMicros-VERSION` is an executable with `chmod +x citeMicros-VERSION`
 
 ## Test it with your favourite browser
