@@ -1,5 +1,9 @@
 # citemicroservices
-API for CTS/CITE returns URNs and Nodes in JSON format
+
+Implementation of the CITE architexture microservices specified [here](https://github.com/cite-architecture/citemicroservices).
+
+Verions of binary releases follow [semantic versioning](http://semver.org/) guidelines.
+
 
 ## Get Started
 1. Download the zipped Repo
