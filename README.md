@@ -1,19 +1,17 @@
 # citemicroservices
 
-Implementation of the CITE architexture microservices specified [here](https://github.com/cite-architecture/citemicroservices).
-
-Verions of binary releases follow [semantic versioning](http://semver.org/) guidelines.
+Implementation of the CITE architexture microservices specified [here](https://github.com/cite-architecture/citemicroservices).  Verions of binary releases follow [semantic versioning](http://semver.org/) guidelines.
 
 
 ## Get Started
 1. Download the zipped Repo
 2. Unpack it (You can rename it afterwards if you like)
 3. Open a Terminal/Commandline and cd into the unpacked (and optionally renamed) folder
-4. On Mac/Linux: start it up with `./citeMicros-1.0.0` / on Windows: doubleclick on `WinCiteMircros-1.0.0.exe` 
+4. On Mac/Linux: start it up with `./citeMicros-VERSION` / on Windows: doubleclick on `WinCiteMircros-VERSION.exe` 
 
 ## Trouble-shooting
 
-You might have to tell your Operating system that `./citeMicros-1.0.0` is an executable with `chmod +x citeMicros-1.0.0`
+You might have to tell your Operating system that `./citeMicros-VERSION` is an executable with `chmod +x citeMicros-VERSION`
 
 ## Test it with your favourite browser
 
