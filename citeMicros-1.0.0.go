@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
 	"io"
 	"io/ioutil"
 	"log"
@@ -205,8 +206,12 @@ func main() {
 	router.HandleFunc("/{CEX}/texts/urns/{URN}", ReturnReff)
 	router.HandleFunc("/{CEX}/texts/{URN}", ReturnPassage)
 	router.HandleFunc("/", ReturnCiteVersion)
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type"})
+	originsOk := handlers.AllowedOrigins([]string{os.Getenv("ORIGIN_ALLOWED")})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
+
 	log.Println("Listening at" + serverIP + "...")
-	log.Fatal(http.ListenAndServe(serverIP, router))
+	log.Fatal(http.ListenAndServe(serverIP, handlers.CORS(originsOk, headersOk, methodsOk)(router)))
 }
 
 func getContent(url string) ([]byte, error) {
@@ -246,6 +251,7 @@ func ReturnWorkURNS(w http.ResponseWriter, r *http.Request) {
 	}
 	result.URN = removeDuplicatesUnordered(result.URN)
 	resultJSON, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, string(resultJSON))
 }
 
@@ -317,6 +323,7 @@ func ReturnCiteVersion(w http.ResponseWriter, r *http.Request) {
 		Texts:       "1.0.0",
 		Textcatalog: ""}
 	resultJSON, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, string(resultJSON))
 }
 
@@ -341,6 +348,7 @@ func ReturnFirst(w http.ResponseWriter, r *http.Request) {
 		message := requestUrn + " is not valid CTS."
 		result := TextResponse{RequestUrn: requestUrn, Status: "Exception", Message: message}
 		resultJSON, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJSON))
 		return
 	}
@@ -387,6 +395,7 @@ func ReturnFirst(w http.ResponseWriter, r *http.Request) {
 				Index: RequestedWork.Index[0]}}}
 	}
 	resultJSON, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, string(resultJSON))
 }
 
@@ -407,6 +416,7 @@ func ReturnLast(w http.ResponseWriter, r *http.Request) {
 		message := requestUrn + " is not valid CTS."
 		result := TextResponse{RequestUrn: requestUrn, Status: "Exception", Message: message}
 		resultJSON, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJSON))
 		return
 	}
@@ -453,6 +463,7 @@ func ReturnLast(w http.ResponseWriter, r *http.Request) {
 				Index:    RequestedWork.Index[len(RequestedWork.URN)-1]}}}
 	}
 	resultJSON, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, string(resultJSON))
 }
 
@@ -473,6 +484,7 @@ func ReturnPrev(w http.ResponseWriter, r *http.Request) {
 		message := requestUrn + " is not valid CTS."
 		result := TextResponse{RequestUrn: requestUrn, Status: "Exception", Message: message}
 		resultJSON, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJSON))
 		return
 	}
@@ -545,6 +557,7 @@ func ReturnPrev(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	resultJSON, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, string(resultJSON))
 }
 
@@ -565,6 +578,7 @@ func ReturnNext(w http.ResponseWriter, r *http.Request) {
 		message := requestUrn + " is not valid CTS."
 		result := TextResponse{RequestUrn: requestUrn, Status: "Exception", Message: message}
 		resultJSON, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJSON))
 		return
 	}
@@ -637,6 +651,7 @@ func ReturnNext(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	resultJSON, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, string(resultJSON))
 }
 
@@ -657,6 +672,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 		message := requestUrn + " is not valid CTS."
 		result := TextResponse{RequestUrn: requestUrn, Status: "Exception", Message: message}
 		resultJSON, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJSON))
 		return
 	}
@@ -684,6 +700,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 		message := "No results for " + requestUrn
 		result = TextResponse{RequestUrn: requestUrn, Status: "Exception", Message: message}
     resultJSON, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
     fmt.Fprintln(w, string(resultJSON))
 	default:
 		var RequestedWork Work
@@ -823,6 +840,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
       range_urn := RequestedWork.URN[startindex : endindex+1]
       result = TextResponse{RequestUrn: requestUrn, Status: "Success", URN: range_urn}
 			resultJSON, _ := json.Marshal(result)
+			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprintln(w, string(resultJSON))
 		default:
 			switch {
@@ -884,6 +902,7 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
         result = TextResponse{RequestUrn: requestUrn, Status: "Exception", Message: "Couldn't find URN."}
 			}
 			resultJSON, _ := json.Marshal(result)
+			w.Header().Set("Content-Type", "application/json")
 			fmt.Fprintln(w, string(resultJSON))
 		}
 	}
@@ -906,6 +925,7 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 		message := requestUrn + " is not valid CTS."
 		result := TextResponse{RequestUrn: requestUrn, Status: "Exception", Message: message}
 		resultJSON, _ := json.Marshal(result)
+		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, string(resultJSON))
 		return
 	}
@@ -1204,5 +1224,6 @@ func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	resultJSON, _ := json.Marshal(result)
+	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintln(w, string(resultJSON))
 }
