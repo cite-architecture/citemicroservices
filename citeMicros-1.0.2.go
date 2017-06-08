@@ -4,8 +4,8 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 	"io"
 	"io/ioutil"
 	"log"
@@ -29,32 +29,32 @@ type Node struct {
 }
 
 type Versions struct {
-Texts          string `json:"texts"`
-Textcatalog    string `json:"textcatalog,omitempty"`
-Citedata       string `json:"citedata,omitempty"`
-Citecatalog    string `json:"citecatalog,omitempty"`
-Citerelations  string `json:"citerelations,omitempty"`
-Citeextensions string `json:"citeextensions,omitempty"`
-DSE            string `json:"dse,omitempty"`
-ORCA           string `json:"orca,omitempty"`
+	Texts          string `json:"texts"`
+	Textcatalog    string `json:"textcatalog,omitempty"`
+	Citedata       string `json:"citedata,omitempty"`
+	Citecatalog    string `json:"citecatalog,omitempty"`
+	Citerelations  string `json:"citerelations,omitempty"`
+	Citeextensions string `json:"citeextensions,omitempty"`
+	DSE            string `json:"dse,omitempty"`
+	ORCA           string `json:"orca,omitempty"`
 }
 
 type CITEResponse struct {
-	Status         string `json:"status"`
-	Service          string `json:"service"`
+	Status   string   `json:"status"`
+	Service  string   `json:"service"`
 	Versions Versions `json:"versions"`
 }
 
 type VersionResponse struct {
-	Status         string `json:"status"`
-	Service          string `json:"service"`
-	Version           string `json:"version"`
+	Status  string `json:"status"`
+	Service string `json:"service"`
+	Version string `json:"version"`
 }
 
 type NodeResponse struct {
 	RequestUrn string   `json:"requestUrn"`
 	Status     string   `json:"status"`
-	Service          string `json:"service"`
+	Service    string   `json:"service"`
 	Message    string   `json:"message,omitempty"`
 	URN        []string `json:"URNs,omitempty"`
 	Nodes      []Node   `json:""`
@@ -63,7 +63,7 @@ type NodeResponse struct {
 type URNResponse struct {
 	RequestUrn string   `json:"requestUrn"`
 	Status     string   `json:"status"`
-	Service          string `json:"service"`
+	Service    string   `json:"service"`
 	Message    string   `json:"message,omitempty"`
 	URN        []string `json:"URNs"`
 }
@@ -84,10 +84,10 @@ type CTSParams struct {
 }
 
 type ServerConfig struct {
-	Host   string `json:"host"`
-	Port   string `json:"port"`
-	Source string `json:"cex_source"`
-  TestSource string `json:"test_cex_source"`
+	Host       string `json:"host"`
+	Port       string `json:"port"`
+	Source     string `json:"cex_source"`
+	TestSource string `json:"test_cex_source"`
 }
 
 func splitCTS(s string) CTSURN {
@@ -218,8 +218,8 @@ func main() {
 	router.HandleFunc("/texts/next/{URN}", ReturnNext)
 	router.HandleFunc("/texts/urns/{URN}", ReturnReff)
 	router.HandleFunc("/texts/{URN}", ReturnPassage)
-  router.HandleFunc("/{CEX}/texts/", ReturnWorkURNS)
-  router.HandleFunc("/{CEX}/texts/first/{URN}", ReturnFirst)
+	router.HandleFunc("/{CEX}/texts/", ReturnWorkURNS)
+	router.HandleFunc("/{CEX}/texts/first/{URN}", ReturnFirst)
 	router.HandleFunc("/{CEX}/texts/last/{URN}", ReturnLast)
 	router.HandleFunc("/{CEX}/texts/previous/{URN}", ReturnPrev)
 	router.HandleFunc("/{CEX}/texts/next/{URN}", ReturnNext)
@@ -254,16 +254,16 @@ func getContent(url string) ([]byte, error) {
 
 func ReturnWorkURNS(w http.ResponseWriter, r *http.Request) {
 	confvar := LoadConfiguration("config.json")
-  vars := mux.Vars(r)
-  requestCEX := ""
+	vars := mux.Vars(r)
+	requestCEX := ""
 	requestCEX = vars["CEX"]
-  var sourcetext string
-  switch {
-  case requestCEX != "":
-    sourcetext = confvar.Source + requestCEX + ".cex"
-  default:
-    sourcetext = confvar.TestSource
-  }
+	var sourcetext string
+	switch {
+	case requestCEX != "":
+		sourcetext = confvar.Source + requestCEX + ".cex"
+	default:
+		sourcetext = confvar.TestSource
+	}
 	result := ParseURNS(CTSParams{Sourcetext: sourcetext})
 	for i := range result.URN {
 		result.URN[i] = strings.Join(strings.Split(result.URN[i], ":")[0:4], ":")
@@ -341,8 +341,8 @@ func ParseWork(p CTSParams) Work {
 func ReturnCiteVersion(w http.ResponseWriter, r *http.Request) {
 	var result CITEResponse
 	result = CITEResponse{Status: "Success",
-		Service: "/cite",
-		Versions: Versions{Texts:"1.0.0", Textcatalog: ""}}
+		Service:  "/cite",
+		Versions: Versions{Texts: "1.0.0", Textcatalog: ""}}
 	resultJSON, _ := json.Marshal(result)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	fmt.Fprintln(w, string(resultJSON))
@@ -351,9 +351,9 @@ func ReturnCiteVersion(w http.ResponseWriter, r *http.Request) {
 func ReturnTextsVersion(w http.ResponseWriter, r *http.Request) {
 	var result VersionResponse
 	result = VersionResponse{
-		Status: "Success",
+		Status:  "Success",
 		Service: "/texts/version",
-		Version:   "1.0.0"}
+		Version: "1.0.0"}
 	resultJSON, _ := json.Marshal(result)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	fmt.Fprintln(w, string(resultJSON))
@@ -361,16 +361,16 @@ func ReturnTextsVersion(w http.ResponseWriter, r *http.Request) {
 
 func ReturnFirst(w http.ResponseWriter, r *http.Request) {
 	confvar := LoadConfiguration("config.json")
-  vars := mux.Vars(r)
-  requestCEX := ""
+	vars := mux.Vars(r)
+	requestCEX := ""
 	requestCEX = vars["CEX"]
-  var sourcetext string
-  switch {
-  case requestCEX != "":
-    sourcetext = confvar.Source + requestCEX + ".cex"
-  default:
-    sourcetext = confvar.TestSource
-  }
+	var sourcetext string
+	switch {
+	case requestCEX != "":
+		sourcetext = confvar.Source + requestCEX + ".cex"
+	default:
+		sourcetext = confvar.TestSource
+	}
 	requestUrn := vars["URN"]
 	if isCTSURN(requestUrn) != true {
 		message := requestUrn + " is not valid CTS."
@@ -431,16 +431,16 @@ func ReturnFirst(w http.ResponseWriter, r *http.Request) {
 
 func ReturnLast(w http.ResponseWriter, r *http.Request) {
 	confvar := LoadConfiguration("config.json")
-  vars := mux.Vars(r)
-  requestCEX := ""
+	vars := mux.Vars(r)
+	requestCEX := ""
 	requestCEX = vars["CEX"]
-  var sourcetext string
-  switch {
-  case requestCEX != "":
-    sourcetext = confvar.Source + requestCEX + ".cex"
-  default:
-    sourcetext = confvar.TestSource
-  }
+	var sourcetext string
+	switch {
+	case requestCEX != "":
+		sourcetext = confvar.Source + requestCEX + ".cex"
+	default:
+		sourcetext = confvar.TestSource
+	}
 	requestUrn := vars["URN"]
 	if isCTSURN(requestUrn) != true {
 		message := requestUrn + " is not valid CTS."
@@ -501,16 +501,16 @@ func ReturnLast(w http.ResponseWriter, r *http.Request) {
 
 func ReturnPrev(w http.ResponseWriter, r *http.Request) {
 	confvar := LoadConfiguration("config.json")
-  vars := mux.Vars(r)
-  requestCEX := ""
+	vars := mux.Vars(r)
+	requestCEX := ""
 	requestCEX = vars["CEX"]
-  var sourcetext string
-  switch {
-  case requestCEX != "":
-    sourcetext = confvar.Source + requestCEX + ".cex"
-  default:
-    sourcetext = confvar.TestSource
-  }
+	var sourcetext string
+	switch {
+	case requestCEX != "":
+		sourcetext = confvar.Source + requestCEX + ".cex"
+	default:
+		sourcetext = confvar.TestSource
+	}
 	requestUrn := vars["URN"]
 	if isCTSURN(requestUrn) != true {
 		message := requestUrn + " is not valid CTS."
@@ -596,16 +596,16 @@ func ReturnPrev(w http.ResponseWriter, r *http.Request) {
 
 func ReturnNext(w http.ResponseWriter, r *http.Request) {
 	confvar := LoadConfiguration("config.json")
-  vars := mux.Vars(r)
-  requestCEX := ""
+	vars := mux.Vars(r)
+	requestCEX := ""
 	requestCEX = vars["CEX"]
-  var sourcetext string
-  switch {
-  case requestCEX != "":
-    sourcetext = confvar.Source + requestCEX + ".cex"
-  default:
-    sourcetext = confvar.TestSource
-  }
+	var sourcetext string
+	switch {
+	case requestCEX != "":
+		sourcetext = confvar.Source + requestCEX + ".cex"
+	default:
+		sourcetext = confvar.TestSource
+	}
 	requestUrn := vars["URN"]
 	if isCTSURN(requestUrn) != true {
 		message := requestUrn + " is not valid CTS."
@@ -691,16 +691,16 @@ func ReturnNext(w http.ResponseWriter, r *http.Request) {
 
 func ReturnReff(w http.ResponseWriter, r *http.Request) {
 	confvar := LoadConfiguration("config.json")
-  vars := mux.Vars(r)
-  requestCEX := ""
+	vars := mux.Vars(r)
+	requestCEX := ""
 	requestCEX = vars["CEX"]
-  var sourcetext string
-  switch {
-  case requestCEX != "":
-    sourcetext = confvar.Source + requestCEX + ".cex"
-  default:
-    sourcetext = confvar.TestSource
-  }
+	var sourcetext string
+	switch {
+	case requestCEX != "":
+		sourcetext = confvar.Source + requestCEX + ".cex"
+	default:
+		sourcetext = confvar.TestSource
+	}
 	requestUrn := vars["URN"]
 	if isCTSURN(requestUrn) != true {
 		message := requestUrn + " is not valid CTS."
@@ -735,9 +735,9 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 		message := "No results for " + requestUrn
 		result = URNResponse{RequestUrn: requestUrn, Status: "Exception", Message: message}
 		result.Service = "/texts/urns"
-    resultJSON, _ := json.Marshal(result)
+		resultJSON, _ := json.Marshal(result)
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-    fmt.Fprintln(w, string(resultJSON))
+		fmt.Fprintln(w, string(resultJSON))
 	default:
 		var RequestedWork Work
 		RequestedWork.WorkURN = works[workindex-1]
@@ -752,129 +752,129 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 		}
 		switch {
 		case isRange(requestUrn):
-      ctsurn := splitCTS(requestUrn)
-      ctsrange := strings.Split(ctsurn.Reference, "-")
-      startURN := ctsurn.Stem + ":" + ctsrange[0]
-      endURN := ctsurn.Stem + ":" + ctsrange[1]
-      var startindex, endindex int
-      switch {
-      case contains(RequestedWork.URN, startURN):
-        for i := range RequestedWork.URN {
-          if RequestedWork.URN[i] == startURN {
-            startindex = i
-          }
-        }
-      case level1contains(RequestedWork.URN, startURN):
-        var match []bool
-        for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
-          match = append(match, match2)
-        }
-        for i := range match {
-          if match[i] == true {
-            startindex = i
-            break
-          }
-        }
-      case level2contains(RequestedWork.URN, startURN):
-        var match []bool
-        for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
-          match = append(match, match2)
-        }
-        for i := range match {
-          if match[i] == true {
-            startindex = i
-            break
-          }
-        }
-      case level3contains(RequestedWork.URN, startURN):
-        var match []bool
-        for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
-          match = append(match, match2)
-        }
-        for i := range match {
-          if match[i] == true {
-            startindex = i
-            break
-          }
-        }
-      case level4contains(RequestedWork.URN, startURN):
-        var match []bool
-        for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
-          match = append(match, match2)
-        }
-        for i := range match {
-          if match[i] == true {
-            startindex = i
-            break
-          }
-        }
-      default:
-        startindex = 0
-      }
-      switch {
-      case contains(RequestedWork.URN, endURN):
-        for i := range RequestedWork.URN {
-          if RequestedWork.URN[i] == endURN {
-            endindex = i
-          }
-        }
-      case level1contains(RequestedWork.URN, endURN):
-        var match []bool
-        for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
-          match = append(match, match2)
-        }
-        for i := len(match) - 1; i >= 0; i-- {
-          if match[i] == true {
-            endindex = i
-            break
-          }
-        }
-      case level2contains(RequestedWork.URN, endURN):
-        var match []bool
-        for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
-          match = append(match, match2)
-        }
-        for i := len(match) - 1; i >= 0; i-- {
-          if match[i] == true {
-            endindex = i
-            break
-          }
-        }
-      case level3contains(RequestedWork.URN, endURN):
-        var match []bool
-        for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
-          match = append(match, match2)
-        }
-        for i := len(match) - 1; i >= 0; i-- {
-          if match[i] == true {
-            endindex = i
-            break
-          }
-        }
-      case level4contains(RequestedWork.URN, endURN):
-        var match []bool
-        for i := range RequestedWork.URN {
-          match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
-          match = append(match, match2)
-        }
-        for i := len(match) - 1; i >= 0; i-- {
-          if match[i] == true {
-            endindex = i
-            break
-          }
-        }
-      default:
-        endindex = len(RequestedWork.URN) - 1
-      }
-      range_urn := RequestedWork.URN[startindex : endindex+1]
-      result = URNResponse{RequestUrn: requestUrn, Status: "Success", URN: range_urn}
+			ctsurn := splitCTS(requestUrn)
+			ctsrange := strings.Split(ctsurn.Reference, "-")
+			startURN := ctsurn.Stem + ":" + ctsrange[0]
+			endURN := ctsurn.Stem + ":" + ctsrange[1]
+			var startindex, endindex int
+			switch {
+			case contains(RequestedWork.URN, startURN):
+				for i := range RequestedWork.URN {
+					if RequestedWork.URN[i] == startURN {
+						startindex = i
+					}
+				}
+			case level1contains(RequestedWork.URN, startURN):
+				var match []bool
+				for i := range RequestedWork.URN {
+					match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
+					match = append(match, match2)
+				}
+				for i := range match {
+					if match[i] == true {
+						startindex = i
+						break
+					}
+				}
+			case level2contains(RequestedWork.URN, startURN):
+				var match []bool
+				for i := range RequestedWork.URN {
+					match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match = append(match, match2)
+				}
+				for i := range match {
+					if match[i] == true {
+						startindex = i
+						break
+					}
+				}
+			case level3contains(RequestedWork.URN, startURN):
+				var match []bool
+				for i := range RequestedWork.URN {
+					match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match = append(match, match2)
+				}
+				for i := range match {
+					if match[i] == true {
+						startindex = i
+						break
+					}
+				}
+			case level4contains(RequestedWork.URN, startURN):
+				var match []bool
+				for i := range RequestedWork.URN {
+					match2, _ := regexp.MatchString((startURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match = append(match, match2)
+				}
+				for i := range match {
+					if match[i] == true {
+						startindex = i
+						break
+					}
+				}
+			default:
+				startindex = 0
+			}
+			switch {
+			case contains(RequestedWork.URN, endURN):
+				for i := range RequestedWork.URN {
+					if RequestedWork.URN[i] == endURN {
+						endindex = i
+					}
+				}
+			case level1contains(RequestedWork.URN, endURN):
+				var match []bool
+				for i := range RequestedWork.URN {
+					match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+)$"), RequestedWork.URN[i])
+					match = append(match, match2)
+				}
+				for i := len(match) - 1; i >= 0; i-- {
+					if match[i] == true {
+						endindex = i
+						break
+					}
+				}
+			case level2contains(RequestedWork.URN, endURN):
+				var match []bool
+				for i := range RequestedWork.URN {
+					match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match = append(match, match2)
+				}
+				for i := len(match) - 1; i >= 0; i-- {
+					if match[i] == true {
+						endindex = i
+						break
+					}
+				}
+			case level3contains(RequestedWork.URN, endURN):
+				var match []bool
+				for i := range RequestedWork.URN {
+					match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match = append(match, match2)
+				}
+				for i := len(match) - 1; i >= 0; i-- {
+					if match[i] == true {
+						endindex = i
+						break
+					}
+				}
+			case level4contains(RequestedWork.URN, endURN):
+				var match []bool
+				for i := range RequestedWork.URN {
+					match2, _ := regexp.MatchString((endURN + "([:|.]*[0-9]+).([0-9]+).([0-9]+).([0-9]+)$"), RequestedWork.URN[i])
+					match = append(match, match2)
+				}
+				for i := len(match) - 1; i >= 0; i-- {
+					if match[i] == true {
+						endindex = i
+						break
+					}
+				}
+			default:
+				endindex = len(RequestedWork.URN) - 1
+			}
+			range_urn := RequestedWork.URN[startindex : endindex+1]
+			result = URNResponse{RequestUrn: requestUrn, Status: "Success", URN: range_urn}
 			result.Service = "/texts/urns"
 			resultJSON, _ := json.Marshal(result)
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -935,8 +935,8 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 					}
 				}
 				result = URNResponse{RequestUrn: requestUrn, Status: "Success", URN: matchingURNs}
-      default:
-        result = URNResponse{RequestUrn: requestUrn, Status: "Exception", Message: "Couldn't find URN."}
+			default:
+				result = URNResponse{RequestUrn: requestUrn, Status: "Exception", Message: "Couldn't find URN."}
 			}
 			result.Service = "/texts/urns"
 			resultJSON, _ := json.Marshal(result)
@@ -948,16 +948,16 @@ func ReturnReff(w http.ResponseWriter, r *http.Request) {
 
 func ReturnPassage(w http.ResponseWriter, r *http.Request) {
 	confvar := LoadConfiguration("config.json")
-  vars := mux.Vars(r)
-  requestCEX := ""
+	vars := mux.Vars(r)
+	requestCEX := ""
 	requestCEX = vars["CEX"]
-  var sourcetext string
-  switch {
-  case requestCEX != "":
-    sourcetext = confvar.Source + requestCEX + ".cex"
-  default:
-    sourcetext = confvar.TestSource
-  }
+	var sourcetext string
+	switch {
+	case requestCEX != "":
+		sourcetext = confvar.Source + requestCEX + ".cex"
+	default:
+		sourcetext = confvar.TestSource
+	}
 	requestUrn := vars["URN"]
 	if isCTSURN(requestUrn) != true {
 		message := requestUrn + " is not valid CTS."
