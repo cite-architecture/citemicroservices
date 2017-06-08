@@ -1,12 +1,21 @@
 # citemicroservices
 
-Implementation of the CITE architexture microservices specified [here](https://github.com/cite-architecture/citemicroservices).  Verions of binary releases follow [semantic versioning](http://semver.org/) guidelines.
+Implementation of the CITE architexture microservices specified [here](https://github.com/cite-architecture/citemicroservices).
+
+
+## Current version: 1.0.1
+
+Versions of binary releases follow [semantic versioning](http://semver.org/) guidelines.
+
+See [release notes](releases.md)
+
+
 
 
 ## Get Started
 1. Clone the repository or download and unpack the zipped repository. (You can rename it afterwards if you like.)
 2. Open a Terminal/Commandline and `cd` into the new folder.
-3. On Mac/Linux: start it up with `./citeMicros-VERSION` / on Windows: doubleclick on `WinCiteMircros-VERSION.exe` 
+3. On Mac/Linux: start it up with `./citeMicros-VERSION` / on Windows: doubleclick on `WinCiteMircros-VERSION.exe`
 
 ## Trouble-shooting
 
@@ -33,4 +42,4 @@ You might have to tell your Operating system that `./citeMicros-VERSION` is an e
 
 ## Modify it to meet your needs:
 
-`config.json` is pretty much self-explicable. 
+`config.json` is pretty much self-explicable.
