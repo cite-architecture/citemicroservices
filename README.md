@@ -3,7 +3,7 @@
 Implementation of the CITE architexture microservices specified [here](https://github.com/cite-architecture/citemicroservices).
 
 
-## Current version: 1.0.4
+## Current version: 1.1.0
 
 Versions of binary releases follow [semantic versioning](http://semver.org/) guidelines.
 
