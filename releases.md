@@ -1,5 +1,7 @@
 # CITE microservices: release notes
 
+**1.1.1**:  Patch comment function (of course!).
+
 **1.1.0**:  `texts` now ignores comments marked by initial `//`
 
 **1.0.4**:  Allow alphanumeric not just numeric in URN.
